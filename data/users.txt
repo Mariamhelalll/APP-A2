@@ -1,0 +1,11 @@
+# University Library - System Users
+# Format: TYPE|Full Name
+# Supported types: STUDENT, STAFF, LIBSTAFF
+STUDENT|Alice Chen
+STUDENT|Ben Patel
+STUDENT|Chen Wei
+STUDENT|Diana Okafor
+STAFF|Dr Bob Smith
+STAFF|Dr Emma Jones
+STAFF|Prof Hassan Rahim
+LIBSTAFF|Carla Jackson

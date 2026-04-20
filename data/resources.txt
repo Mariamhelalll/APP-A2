@@ -1,0 +1,13 @@
+# University Library - Resource Catalogue
+# Format: TYPE|title|author-or-issn-or-acronym
+# Supported types: BOOK, JOURNAL, CONFERENCE
+BOOK|The C++ Programming Language|Bjarne Stroustrup
+BOOK|Clean Code|Robert Martin
+BOOK|Design Patterns|Erich Gamma
+BOOK|Effective Modern C++|Scott Meyers
+JOURNAL|IEEE Software|0740-7459
+JOURNAL|Communications of the ACM|0001-0782
+JOURNAL|ACM Computing Surveys|0360-0300
+CONFERENCE|Proceedings of OOPSLA|OOPSLA
+CONFERENCE|International Conference on Software Engineering|ICSE
+CONFERENCE|SIGGRAPH Proceedings|SIGGRAPH
