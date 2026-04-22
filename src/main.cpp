@@ -4,10 +4,12 @@
 // Student ID: 29073094
 // Module:     CMP2811 Applied Programming Paradigms
 // Assignment: Assessment Item 2 - Library Management System
-// Purpose:    Day 3 entry point. Interactive menu allowing the
-//             librarian to borrow, return, and list resources
-//             and users. Enforces every business rule via the
-//             LoanManager class and its custom exceptions.
+// Purpose:    Day 4 entry point. Extends Day 3's menu with the
+//             three core reports required by the brief:
+//               - resources currently available
+//               - resources currently on loan
+//               - users who have borrowed
+//             Every other behaviour remains as Day 3.
 // =============================================================
 #include <iostream>
 #include <stdexcept>
@@ -18,19 +20,27 @@
 #include "LoanManager.h"
 #include "Exceptions.h"
 #include "InputHelpers.h"
+#include "Reports.h"
 
 // ------------------------------------------------------------------
 // Display the menu of available actions to the librarian.
 // ------------------------------------------------------------------
 static void showMenu() {
-    std::cout << "\n=========== MAIN MENU ==========="
-              << "\n  1. List all resources"
-              << "\n  2. List all users"
-              << "\n  3. Borrow a resource"
-              << "\n  4. Return a resource"
-              << "\n  5. Show active loans"
-              << "\n  0. Exit"
-              << "\n=================================\n";
+    std::cout << "\n================ MAIN MENU ================"
+              << "\n  -- Catalogue --"
+              << "\n   1. List all resources"
+              << "\n   2. List all users"
+              << "\n  -- Loans --"
+              << "\n   3. Borrow a resource"
+              << "\n   4. Return a resource"
+              << "\n   5. Show active loans"
+              << "\n  -- Reports --"
+              << "\n   6. Report: resources available"
+              << "\n   7. Report: resources on loan"
+              << "\n   8. Report: users who have borrowed"
+              << "\n  -------------"
+              << "\n   0. Exit"
+              << "\n===========================================\n";
 }
 
 // ------------------------------------------------------------------
@@ -116,11 +126,20 @@ int main() {
                 case 5:
                     showActiveLoans(manager);
                     break;
+                case 6:
+                    Reports::printAvailable(resources);
+                    break;
+                case 7:
+                    Reports::printLoaned(resources, manager);
+                    break;
+                case 8:
+                    Reports::printBorrowers(users);
+                    break;
                 case 0:
                     std::cout << "Goodbye.\n";
                     return 0;
                 default:
-                    std::cout << "  [!] Unknown option. Please choose 0-5.\n";
+                    std::cout << "  [!] Unknown option. Please choose 0-8.\n";
             }
         }
     }
