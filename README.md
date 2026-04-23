@@ -5,6 +5,6 @@
 ./library
 
 2) To push the code to github:
-$ git add .
+git add .
 git commit -m "Day 4: core reports(available, loaned, borrowers) via Reports namespace"
 git push

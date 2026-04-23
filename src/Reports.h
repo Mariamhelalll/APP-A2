@@ -4,33 +4,55 @@
 // Student ID: 29073094
 // Module:     CMP2811 Applied Programming Paradigms
 // Assignment: Assessment Item 2
-// Purpose:    Generates the three core reports required by the
-//             brief:
-//               - resources currently available for lending
-//               - resources currently on loan (with borrower)
-//               - users who have borrowed at least one resource
-//
-//             All report functions print to std::cout via
-//             polymorphic operator<< on the underlying objects,
-//             keeping a clean separation from business logic.
+// Purpose:    Generates the core reports required by the brief
+//             plus the Day-5 listed-extended features:
+//               - sortable available/loaned reports (title or
+//                 author, ascending or descending)
+//               - save borrowers report to a text file
+//               - keyword search over title/author/acronym
+//               - display the ordered activity log
 // =============================================================
 #pragma once
 
+#include <string>
 #include "ResourceList.h"
 #include "UserList.h"
 #include "LoanManager.h"
 
 namespace Reports {
 
-    // Prints every resource that is lendable AND not currently borrowed.
-    void printAvailable(const ResourceList& resources);
+    // Sort options used by the extended report features.
+    // enum class is used (not plain enum) for type safety:
+    // values are strongly scoped, preventing accidental comparison
+    // with unrelated integers.
+    enum class SortBy    { Title, Author };
+    enum class SortOrder { Ascending, Descending };
 
-    // Prints every resource currently on loan, along with the borrower.
-    // Needs the LoanManager to look up who has each item.
+    // ---- Core reports (also sortable via parameters) ------------
+    void printAvailable(const ResourceList& resources,
+                        SortBy    by    = SortBy::Title,
+                        SortOrder order = SortOrder::Ascending);
+
     void printLoaned(const ResourceList& resources,
-                     const LoanManager&  manager);
+                     const LoanManager&  manager,
+                     SortBy    by    = SortBy::Title,
+                     SortOrder order = SortOrder::Ascending);
 
-    // Prints every user who currently has at least one outstanding loan.
     void printBorrowers(const UserList& users);
+
+    // ---- Day-5 extended features --------------------------------
+
+    // Save the "users who have borrowed" report to a text file.
+    // Creates or overwrites the file. Returns true on success.
+    bool saveBorrowersToFile(const UserList&    users,
+                             const std::string& filename);
+
+    // Keyword search over title, author (Book) and acronym
+    // (Conference). Results are printed alphabetically by title.
+    void search(const ResourceList& resources,
+                const std::string&  keyword);
+
+    // Display the ordered activity log of every borrow/return event.
+    void printActivityLog(const LoanManager& manager);
 
 }  // namespace Reports
