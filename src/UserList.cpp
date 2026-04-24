@@ -7,25 +7,11 @@
 #include "Student.h"
 #include "Staff.h"
 #include "LibStaff.h"
+#include "StringUtils.h"
 
 #include <fstream>
-#include <sstream>
 #include <iostream>
 #include <stdexcept>
-
-namespace {
-    // Same split helper as in ResourceList.cpp; kept file-local here
-    // rather than shared so each translation unit is self-contained.
-    std::vector<std::string> split(const std::string& line, char delim) {
-        std::vector<std::string> tokens;
-        std::stringstream ss(line);
-        std::string token;
-        while (std::getline(ss, token, delim)) {
-            tokens.push_back(token);
-        }
-        return tokens;
-    }
-}
 
 // Factory: type token -> concrete Person subclass.
 std::shared_ptr<Person> UserList::makeUser(
@@ -46,13 +32,14 @@ UserList::UserList(const std::string& filename) {
 
     std::string line;
     std::size_t lineNo = 0;
-    int nextId = 1001;  // user IDs start at 1001 per the plan
+    int nextId = 1001;
 
     while (std::getline(in, line)) {
         ++lineNo;
         if (line.empty() || line.front() == '#') continue;
 
-        auto tokens = split(line, '|');
+        // Shared split helper - no more duplication (Day 6 DRY fix).
+        auto tokens = StringUtils::split(line, '|');
         if (tokens.size() < 2) {
             std::cerr << "[warn] users.txt line " << lineNo
                       << ": skipping malformed line\n";

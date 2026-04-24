@@ -7,6 +7,7 @@
 #include "Book.h"
 #include "Journal.h"
 #include "Conference.h"
+#include "StringUtils.h"
 
 #include <fstream>
 #include <sstream>
@@ -15,22 +16,10 @@
 #include <stdexcept>
 
 // ------------------------------------------------------------------
-// Small helper: split a line on the '|' delimiter into its tokens.
-// Kept in an anonymous namespace so it is private to this file.
+// File-local helper: format a counter as "R001", "R002", ... using
+// stream manipulators for zero-padding.
 // ------------------------------------------------------------------
 namespace {
-    std::vector<std::string> split(const std::string& line, char delim) {
-        std::vector<std::string> tokens;
-        std::stringstream ss(line);
-        std::string token;
-        while (std::getline(ss, token, delim)) {
-            tokens.push_back(token);
-        }
-        return tokens;
-    }
-
-    // Produces "R001", "R002", ... from a counter.
-    // Uses stream manipulators for zero-padding (contemporary C++).
     std::string makeResourceID(std::size_t n) {
         std::ostringstream oss;
         oss << "R" << std::setw(3) << std::setfill('0') << n;
@@ -47,12 +36,8 @@ std::shared_ptr<Resource> ResourceList::makeResource(
     const std::string& id,
     const std::vector<std::string>& fields)
 {
-    // fields layout:
-    //   BOOK       -> [title, author]
-    //   JOURNAL    -> [title, issn]
-    //   CONFERENCE -> [title, acronym]
     if (fields.size() < 2) {
-        return nullptr;  // malformed line -- caller will skip
+        return nullptr;
     }
 
     if (type == "BOOK") {
@@ -64,11 +49,9 @@ std::shared_ptr<Resource> ResourceList::makeResource(
     if (type == "CONFERENCE") {
         return std::make_shared<Conference>(id, fields[0], fields[1]);
     }
-    return nullptr;  // unknown type token
+    return nullptr;
 }
 
-// ------------------------------------------------------------------
-// Constructor: open the file, parse each line, build the list.
 // ------------------------------------------------------------------
 ResourceList::ResourceList(const std::string& filename) {
     std::ifstream in(filename);
@@ -83,18 +66,16 @@ ResourceList::ResourceList(const std::string& filename) {
 
     while (std::getline(in, line)) {
         ++lineNo;
-
-        // Skip blank lines and full-line comments (start with '#').
         if (line.empty() || line.front() == '#') continue;
 
-        auto tokens = split(line, '|');
+        // Use the shared split helper from StringUtils (Day 6 DRY fix).
+        auto tokens = StringUtils::split(line, '|');
         if (tokens.size() < 3) {
             std::cerr << "[warn] resources.txt line " << lineNo
                       << ": skipping malformed line\n";
             continue;
         }
 
-        // First token = type; remaining tokens = per-type fields.
         const std::string& type = tokens[0];
         std::vector<std::string> fields(tokens.begin() + 1, tokens.end());
 
