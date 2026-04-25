@@ -1,4 +1,8 @@
 // Conference.cpp
+// Author:     Maryam Mohamed
+// Student ID: 29073094
+// Module:     CMP2811 Applied Programming Paradigms
+// Assignment: Assessment Item 2 - Library Management System
 #include "Conference.h"
 #include <sstream>
 

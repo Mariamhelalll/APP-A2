@@ -1,10 +1,9 @@
-// =============================================================
 // File:       InputHelpers.h
 // Author:     Maryam Mohamed 
 // Student ID: 29073094
 // Purpose:    Robust user input helpers that re-prompt on bad
 //             input instead of crashing or entering a bad state.
-// =============================================================
+
 #pragma once
 
 #include <iostream>

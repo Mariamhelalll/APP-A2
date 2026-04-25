@@ -1,4 +1,3 @@
-// =============================================================
 // File:       Exceptions.h
 // Author:     Maryam Mohamed 
 // Student ID: 29073094
@@ -7,7 +6,7 @@
 // Purpose:    Custom exception hierarchy for business-rule errors.
 //             All inherit from std::runtime_error so a single
 //             catch can handle any library-level failure.
-// =============================================================
+
 #pragma once
 
 #include <stdexcept>
