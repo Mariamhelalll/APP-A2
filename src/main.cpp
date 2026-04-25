@@ -4,14 +4,10 @@
 // Student ID: 29073094
 // Module:     CMP2811 Applied Programming Paradigms
 // Assignment: Assessment Item 2 - Library Management System
-// Purpose:    Day 5 entry point. Adds every listed-extended
-//             feature from the brief:
-//               - sort available / loaned reports by title
-//                 or author, ascending or descending
-//               - save borrowers report to a text file
-//               - keyword search across titles / authors
-//                 / acronyms (results alphabetical)
-//               - display the ordered activity log
+// Purpose:    Day 7 entry point. Adds the two innovative
+//             extended features:
+//               12. Overdue loans report (uses <chrono>)
+//               13. Statistics dashboard (uses std::map)
 // =============================================================
 #include <iostream>
 #include <stdexcept>
@@ -23,10 +19,8 @@
 #include "Exceptions.h"
 #include "InputHelpers.h"
 #include "Reports.h"
+#include "Statistics.h"
 
-// ------------------------------------------------------------------
-// Display the menu of available actions to the librarian.
-// ------------------------------------------------------------------
 static void showMenu() {
     std::cout << "\n================= MAIN MENU ================="
               << "\n  -- Catalogue --"
@@ -41,26 +35,23 @@ static void showMenu() {
               << "\n   7. Report: resources on loan (sorted)"
               << "\n   8. Report: users who have borrowed"
               << "\n   9. Save borrowers report to file"
-              << "\n  -- Extended --"
+              << "\n  -- Search & Logs --"
               << "\n  10. Search for a keyword"
               << "\n  11. Show activity log"
+              << "\n  -- Innovative --"
+              << "\n  12. Overdue loans report"
+              << "\n  13. Statistics dashboard"
               << "\n  -------------"
               << "\n   0. Exit"
               << "\n============================================\n";
 }
 
-// ------------------------------------------------------------------
-// Prompt the user for a sort key (title or author).
-// ------------------------------------------------------------------
 static Reports::SortBy promptSortBy() {
     std::cout << "  Sort by:\n    1. Title\n    2. Author\n";
     const int choice = readInt("  Choice: ");
     return (choice == 2) ? Reports::SortBy::Author : Reports::SortBy::Title;
 }
 
-// ------------------------------------------------------------------
-// Prompt the user for a sort direction (asc or desc).
-// ------------------------------------------------------------------
 static Reports::SortOrder promptSortOrder() {
     std::cout << "  Order:\n    1. Ascending\n    2. Descending\n";
     const int choice = readInt("  Choice: ");
@@ -68,12 +59,9 @@ static Reports::SortOrder promptSortOrder() {
                          : Reports::SortOrder::Ascending;
 }
 
-// ------------------------------------------------------------------
-// Handle option 3: borrow a resource.
-// ------------------------------------------------------------------
 static void handleBorrow(LoanManager& manager) {
-    const int user_id         = readInt("User ID:      ");
-    const std::string res_id  = readLine("Resource ID:  ");
+    const int user_id        = readInt("User ID:      ");
+    const std::string res_id = readLine("Resource ID:  ");
     try {
         manager.borrow(user_id, res_id);
         std::cout << "  [ok] Loan recorded.\n";
@@ -83,12 +71,9 @@ static void handleBorrow(LoanManager& manager) {
     }
 }
 
-// ------------------------------------------------------------------
-// Handle option 4: return a resource.
-// ------------------------------------------------------------------
 static void handleReturn(LoanManager& manager) {
-    const int user_id         = readInt("User ID:      ");
-    const std::string res_id  = readLine("Resource ID:  ");
+    const int user_id        = readInt("User ID:      ");
+    const std::string res_id = readLine("Resource ID:  ");
     try {
         manager.returnResource(user_id, res_id);
         std::cout << "  [ok] Return recorded.\n";
@@ -98,9 +83,6 @@ static void handleReturn(LoanManager& manager) {
     }
 }
 
-// ------------------------------------------------------------------
-// Handle option 5: show all active loans.
-// ------------------------------------------------------------------
 static void showActiveLoans(const LoanManager& manager) {
     const auto& loans = manager.getActiveLoans();
     if (loans.empty()) {
@@ -113,18 +95,12 @@ static void showActiveLoans(const LoanManager& manager) {
     }
 }
 
-// ------------------------------------------------------------------
-// Handle option 6: sorted available-resources report.
-// ------------------------------------------------------------------
 static void handleAvailableReport(const ResourceList& resources) {
     const auto by    = promptSortBy();
     const auto order = promptSortOrder();
     Reports::printAvailable(resources, by, order);
 }
 
-// ------------------------------------------------------------------
-// Handle option 7: sorted loaned-resources report.
-// ------------------------------------------------------------------
 static void handleLoanedReport(const ResourceList& resources,
                                const LoanManager&  manager)
 {
@@ -133,9 +109,6 @@ static void handleLoanedReport(const ResourceList& resources,
     Reports::printLoaned(resources, manager, by, order);
 }
 
-// ------------------------------------------------------------------
-// Handle option 9: save borrowers report to a text file.
-// ------------------------------------------------------------------
 static void handleSaveBorrowers(const UserList& users) {
     const std::string fname = readLine("Output file [borrowers.txt]: ");
     const std::string target = fname.empty() ? "borrowers.txt" : fname;
@@ -147,15 +120,11 @@ static void handleSaveBorrowers(const UserList& users) {
     }
 }
 
-// ------------------------------------------------------------------
-// Handle option 10: keyword search.
-// ------------------------------------------------------------------
 static void handleSearch(const ResourceList& resources) {
     const std::string keyword = readLine("Keyword: ");
     Reports::search(resources, keyword);
 }
 
-// ------------------------------------------------------------------
 int main() {
     std::cout << "===============================================\n"
               << "  University Library Management System\n"
@@ -170,7 +139,6 @@ int main() {
         std::cout << "Loaded " << resources.getAll().size() << " resources and "
                   << users.getAll().size() << " users.\n";
 
-        // Main menu loop.
         while (true) {
             showMenu();
             const int choice = readInt("Choice: ");
@@ -189,9 +157,11 @@ int main() {
                 case 9:  handleSaveBorrowers(users);              break;
                 case 10: handleSearch(resources);                 break;
                 case 11: Reports::printActivityLog(manager);      break;
+                case 12: Reports::printOverdue(manager);          break;
+                case 13: Statistics::printDashboard(manager);     break;
                 case 0:  std::cout << "Goodbye.\n"; return 0;
                 default: std::cout
-                           << "  [!] Unknown option. Please choose 0-11.\n";
+                           << "  [!] Unknown option. Please choose 0-13.\n";
             }
         }
     }

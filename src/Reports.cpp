@@ -18,28 +18,18 @@
 
 namespace Reports {
 
-// ------------------------------------------------------------------
-// File-local helper: get a "sort key" string for a resource based
-// on the user's chosen SortBy. Books have an author; Journals and
-// Conferences do not, so for SortBy::Author we fall back to their
-// title so they still have a defined position in the ordering.
-// ------------------------------------------------------------------
 namespace {
 
     std::string sortKey(const std::shared_ptr<Resource>& r, SortBy by) {
         if (by == SortBy::Author) {
-            // dynamic_cast returns nullptr if the actual type is not Book.
             if (auto book = std::dynamic_pointer_cast<Book>(r)) {
                 return book->getAuthor();
             }
-            // Fallback: non-books have no author, use the title.
             return r->getTitle();
         }
-        // Default: sort by title.
         return r->getTitle();
     }
 
-    // Generic sorter used by both the available and loaned reports.
     void sortResources(std::vector<std::shared_ptr<Resource>>& items,
                        SortBy by, SortOrder order)
     {
@@ -53,11 +43,8 @@ namespace {
             });
     }
 
-}  // namespace
+}
 
-// ------------------------------------------------------------------
-// Core report 1 (now sortable): available resources.
-// ------------------------------------------------------------------
 void printAvailable(const ResourceList& resources,
                     SortBy by, SortOrder order)
 {
@@ -85,9 +72,6 @@ void printAvailable(const ResourceList& resources,
     }
 }
 
-// ------------------------------------------------------------------
-// Core report 2 (now sortable): currently loaned resources.
-// ------------------------------------------------------------------
 void printLoaned(const ResourceList& /*resources*/,
                  const LoanManager&  manager,
                  SortBy by, SortOrder order)
@@ -99,7 +83,6 @@ void printLoaned(const ResourceList& /*resources*/,
         return;
     }
 
-    // Make a mutable copy so we can sort. Original loans stay untouched.
     std::vector<Loan> sortedLoans(loans.begin(), loans.end());
 
     std::sort(sortedLoans.begin(), sortedLoans.end(),
@@ -118,13 +101,13 @@ void printLoaned(const ResourceList& /*resources*/,
         const auto& per = loan.getPerson();
         std::cout << "  " << *res
                   << "\n      -> borrowed by " << per->getName()
-                  << " (ID " << per->getID() << ")\n";
+                  << " (ID " << per->getID() << "), due "
+                  << loan.dueDateString();
+        if (loan.isOverdue()) std::cout << " *** OVERDUE ***";
+        std::cout << '\n';
     }
 }
 
-// ------------------------------------------------------------------
-// Core report 3: users who have borrowed (unchanged from Day 4).
-// ------------------------------------------------------------------
 void printBorrowers(const UserList& users) {
     std::vector<std::shared_ptr<Person>> borrowers;
     const auto& all = users.getAll();
@@ -145,14 +128,9 @@ void printBorrowers(const UserList& users) {
     }
 }
 
-// ------------------------------------------------------------------
-// Day 5 extended: save borrowers report to a text file.
-// ------------------------------------------------------------------
 bool saveBorrowersToFile(const UserList& users, const std::string& filename) {
     std::ofstream out(filename);
-    if (!out) {
-        return false;  // could not open the file for writing
-    }
+    if (!out) return false;
 
     out << "University Library - Borrowers Report\n";
     out << "=====================================\n\n";
@@ -171,14 +149,9 @@ bool saveBorrowersToFile(const UserList& users, const std::string& filename) {
         out << "\nTotal borrowers: " << count << '\n';
     }
 
-    return true;  // ofstream closes itself via RAII when out goes out of scope
+    return true;
 }
 
-// ------------------------------------------------------------------
-// Day 5 extended: keyword search.
-// Matches against title (all types), author (Book) and acronym
-// (Conference). Case-insensitive. Results printed alphabetically.
-// ------------------------------------------------------------------
 void search(const ResourceList& resources, const std::string& keyword) {
     if (keyword.empty()) {
         std::cout << "  (empty keyword - nothing to search)\n";
@@ -191,7 +164,6 @@ void search(const ResourceList& resources, const std::string& keyword) {
         bool match = StringUtils::containsIgnoreCase(r->getTitle(), keyword);
 
         if (!match) {
-            // Check Book author and Conference acronym.
             if (auto book = std::dynamic_pointer_cast<Book>(r)) {
                 match = StringUtils::containsIgnoreCase(book->getAuthor(), keyword);
             }
@@ -208,7 +180,6 @@ void search(const ResourceList& resources, const std::string& keyword) {
         return;
     }
 
-    // Alphabetical by title.
     std::sort(matches.begin(), matches.end(),
         [](const std::shared_ptr<Resource>& a,
            const std::shared_ptr<Resource>& b) {
@@ -222,9 +193,6 @@ void search(const ResourceList& resources, const std::string& keyword) {
     }
 }
 
-// ------------------------------------------------------------------
-// Day 5 extended: display the ordered activity log.
-// ------------------------------------------------------------------
 void printActivityLog(const LoanManager& manager) {
     const auto& log = manager.getActivityLog();
 
@@ -236,6 +204,24 @@ void printActivityLog(const LoanManager& manager) {
     std::cout << "\n--- Activity Log (" << log.size() << " events) ---\n";
     for (const auto& entry : log) {
         std::cout << "  " << entry << '\n';
+    }
+}
+
+void printOverdue(const LoanManager& manager) {
+    const auto& loans = manager.getActiveLoans();
+
+    std::vector<Loan> overdue;
+    std::copy_if(loans.begin(), loans.end(), std::back_inserter(overdue),
+        [](const Loan& l) { return l.isOverdue(); });
+
+    if (overdue.empty()) {
+        std::cout << "  (no overdue loans)\n";
+        return;
+    }
+
+    std::cout << "\n--- Overdue Loans (" << overdue.size() << ") ---\n";
+    for (const auto& l : overdue) {
+        std::cout << "  " << l.asString() << '\n';
     }
 }
 

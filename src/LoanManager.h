@@ -1,4 +1,4 @@
-// =============================================================
+
 // File:       LoanManager.h
 // Author:     Maryam Mohamed
 // Student ID: 29073094
@@ -12,7 +12,7 @@
 //               - Conferences cannot be borrowed.
 //             Also maintains an ordered activity log of every
 //             borrow / return event.
-// =============================================================
+
 #pragma once
 
 #include <vector>
