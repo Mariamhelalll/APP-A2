@@ -4,20 +4,20 @@
 // Student ID: 29073094
 // Module:     CMP2811 Applied Programming Paradigms
 // Assignment: Assessment Item 2 - Library Management System
+// Purpose:    Manages the borrowing and returning of resources, enforcing all business rules and maintaining an activity log.
 
 #include "LoanManager.h"
 #include "Exceptions.h"
 
-#include <algorithm>
-#include <chrono>
-#include <ctime>
-#include <iomanip>
-#include <sstream>
+#include <algorithm> // Required for std::find_if
+#include <chrono>    // Required for system_clock and time manipulation
+#include <ctime>     // Required for std::tm and time_t
+#include <iomanip>   // Required for std::put_time (formatting output)
+#include <sstream>   // Required for std::ostringstream
 
-// ------------------------------------------------------------------
-// File-local helper: format the current time as "YYYY-MM-DD HH:MM:SS"
-// for activity-log entries.
-// ------------------------------------------------------------------
+
+// formats the current time as "YYYY-MM-DD HH:MM:SS" for activity-log entries.
+
 namespace {
     std::string timestamp() {
         const auto now = std::chrono::system_clock::now();
@@ -34,7 +34,7 @@ namespace {
     }
 }
 
-// ------------------------------------------------------------------
+
 LoanManager::LoanManager(ResourceList& resources, UserList& users)
     : _resources(resources), _users(users) {}
 

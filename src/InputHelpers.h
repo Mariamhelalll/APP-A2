@@ -3,9 +3,7 @@
 // Student ID: 29073094
 // Module:     CMP2811 Applied Programming Paradigms
 // Assignment: Assessment Item 2 - Library Management System
-// Purpose:    Robust user input helpers that re-prompt on bad
-//             input instead of crashing or entering a bad state.
-
+// Purpose:    Helper functions for robust user input handling. These functions will repeatedly prompt the user until valid input is received, preventing common issues like non-numeric input when an integer is expected. They also trim whitespace from string inputs.
 #pragma once
 
 #include <iostream>
@@ -13,15 +11,15 @@
 #include <string>
 #include <sstream>
 
-// Read a single integer from stdin. On bad input (non-numeric,
-// EOF, etc.) clears the stream and re-prompts until success.
+// Read a single integer from input. 
+// On bad input (non-numeric,EOF, etc), it clears the stream and re-prompts until successful input is entered.
 inline int readInt(const std::string& prompt) {
     int value;
     while (true) {
         std::cout << prompt;
         std::string line;
         if (!std::getline(std::cin, line)) {
-            // EOF or I/O failure: treat as 0 to avoid infinite loop
+            // EOF or I/O failure is treated as 0 to avoid infinite loop.
             std::cin.clear();
             return 0;
         }
@@ -33,7 +31,7 @@ inline int readInt(const std::string& prompt) {
     }
 }
 
-// Read a whole line of text. Trims leading/trailing whitespace.
+// Read a whole line of text + trimming the leading/trailing whitespace.
 inline std::string readLine(const std::string& prompt) {
     std::cout << prompt;
     std::string line;
@@ -41,7 +39,7 @@ inline std::string readLine(const std::string& prompt) {
         std::cin.clear();
         return {};
     }
-    // Trim whitespace
+    // Trimming of whitespace
     const auto first = line.find_first_not_of(" \t\r\n");
     if (first == std::string::npos) return {};
     const auto last = line.find_last_not_of(" \t\r\n");

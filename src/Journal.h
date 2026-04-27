@@ -4,6 +4,7 @@
 // Student ID: 29073094
 // Module:     CMP2811 Applied Programming Paradigms
 // Assignment: Assessment Item 2 - Library Management System
+// Purpose:    Concrete Resource subclass representing a lendable journal item.
 
 #pragma once
 #include "Resource.h"

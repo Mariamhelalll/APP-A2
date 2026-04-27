@@ -3,10 +3,11 @@
 // Student ID: 29073094
 // Module:     CMP2811 Applied Programming Paradigms
 // Assignment: Assessment Item 2 - Library Management System
+// Purpose:    Concrete Resource subclass representing a lendable journal item.
 #include "Journal.h"
 #include <sstream>
 
-// Journals can be lent.
+// As mentioned in the brief, journals can be lent.
 Journal::Journal(const std::string& id, const std::string& title, const std::string& issn)
     : Resource(id, title, true), _issn(issn) {}
 

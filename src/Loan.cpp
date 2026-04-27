@@ -4,6 +4,7 @@
 // Student ID: 29073094
 // Module:     CMP2811 Applied Programming Paradigms
 // Assignment: Assessment Item 2 - Library Management System
+// Purpose:    Represents a loan of a resource to a person, tracking the loan date and calculating due dates and overdue status.
 
 #include "Loan.h"
 

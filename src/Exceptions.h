@@ -3,9 +3,8 @@
 // Student ID: 29073094
 // Module:     CMP2811 Applied Programming Paradigms
 // Assignment: Assessment Item 2
-// Purpose:    Custom exception hierarchy for business-rule errors.
-//             All inherit from std::runtime_error so a single
-//             catch can handle any library-level failure.
+// Purpose:   - Custom exception types for library business logic errors.
+//            - All inherit from LibraryException, so catching that will catch all library-level exceptions.
 
 #pragma once
 

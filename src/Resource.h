@@ -3,10 +3,8 @@
 // Student ID: 29073094
 // Module:     CMP2811 Applied Programming Paradigms
 // Assignment: Assessment Item 2
-// Purpose:    Abstract base class for every library resource
-//             (Book, Journal, Conference). Encodes whether a
-//             type is lendable at all (_canLend) and whether
-//             a specific item is currently on loan (_isBorrowed).
+// Purpose:    - Abstract base class for every library resource (Book, Journal, Conference). 
+//             - Encodes whether atype is lendable at all (_canLend) and whether a specific item is currently on loan (_isBorrowed).
 
 #pragma once
 
@@ -25,7 +23,7 @@
 class Resource {
 protected:
     bool        _canLend;      ///< false for Conference, true otherwise
-    std::string _ID;           ///< unique string ID, e.g. "R001"
+    std::string _ID;           ///< unique string ID, eg: "R001"
     bool        _isBorrowed;   ///< true when currently on loan
     std::string _title;        ///< human-readable title
 
