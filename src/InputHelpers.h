@@ -23,6 +23,7 @@ inline int readInt(const std::string& prompt) {
             std::cin.clear();
             return 0;
         }
+        //  stringstream is used to validate that the entire line is a valid integer (no extra characters).
         std::stringstream ss(line);
         if ((ss >> value) && (ss >> std::ws).eof()) {
             return value;

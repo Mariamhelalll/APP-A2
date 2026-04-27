@@ -13,6 +13,7 @@
  * @class Journal
  * @brief A lendable periodical identified by its ISSN.
  */
+// The Journal class represents a lendable journal resource in the library. It has an ID, a title, and an ISSN. The asString method provides a string representation of the journal, including its ID, title, and ISSN. The getISSN method allows retrieval of the journal's ISSN.
 class Journal final : public Resource {
 private:
     std::string _issn;   ///< International Standard Serial Number

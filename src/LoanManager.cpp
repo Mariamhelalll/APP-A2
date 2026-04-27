@@ -17,13 +17,13 @@
 
 
 // formats the current time as "YYYY-MM-DD HH:MM:SS" for activity-log entries.
-
+// This is used in the logEvent method to timestamp each borrow/return action in the activity log.
 namespace {
     std::string timestamp() {
-        const auto now = std::chrono::system_clock::now();
-        const auto tt  = std::chrono::system_clock::to_time_t(now);
+        const auto now = std::chrono::system_clock::now(); // Get the current time as a time_point.
+        const auto tt  = std::chrono::system_clock::to_time_t(now); // Convert the time_point to time_t, which is a more traditional C-style time representation that can be formatted.
         std::tm tm{};
-    #ifdef _WIN32
+    #ifdef _WIN32 // Windows uses localtime_s for thread-safe local time conversion, while POSIX systems use localtime_r.  Both cases are handeled for portability.
         localtime_s(&tm, &tt);
     #else
         localtime_r(&tt, &tm);
@@ -34,16 +34,16 @@ namespace {
     }
 }
 
-
+// The constructor takes references to the resource and user lists, which it uses for lookups during borrow/return operations. It does not take ownership of these lists, as they are managed elsewhere in the program.
 LoanManager::LoanManager(ResourceList& resources, UserList& users)
     : _resources(resources), _users(users) {}
 
-// ------------------------------------------------------------------
-// Lookup helpers using std::find_if with lambdas.
-// ------------------------------------------------------------------
+
+// Look up a user by ID, or throw NotFoundException if the user does not exist. 
+//This is a helper method used by both borrow and return operations to validate the user ID and retrieve the corresponding Person object.
 std::shared_ptr<Person> LoanManager::findUser(int userID) const {
-    const auto& users = _users.getAll();
-    auto it = std::find_if(users.begin(), users.end(),
+    const auto& users = _users.getAll(); // Get the list of users from the UserList. We will search through this list to find the user with the matching ID.
+    auto it = std::find_if(users.begin(), users.end(), //
         [userID](const std::shared_ptr<Person>& p) {
             return p->getID() == userID;
         });
@@ -53,7 +53,8 @@ std::shared_ptr<Person> LoanManager::findUser(int userID) const {
     }
     return *it;
 }
-
+// Look up a resource by ID, or throw NotFoundException if the resource does not exist.
+// This is a helper method used by both borrow and return operations to validate the resource ID and retrieve the corresponding Resource object.
 std::shared_ptr<Resource> LoanManager::findResource(const std::string& resourceID) const {
     const auto& resources = _resources.getAll();
     auto it = std::find_if(resources.begin(), resources.end(),
@@ -66,15 +67,18 @@ std::shared_ptr<Resource> LoanManager::findResource(const std::string& resourceI
     }
     return *it;
 }
-
+// Append a timestamped entry to the activity log. 
+// This is called after every successful borrow or return operation to keep a record of all transactions in the system.
 void LoanManager::logEvent(const std::string& message) {
     _activityLog.push_back("[" + timestamp() + "] " + message);
 }
 
-// ------------------------------------------------------------------
-// The borrow operation: every business rule enforced here.
-// Throws a specific exception for each kind of failure.
-// ------------------------------------------------------------------
+// The borrow method implements the logic for borrowing a resource. It performs several checks to enforce the business rules:
+// 1. It validates that the user ID and resource ID exist in the system, throwing NotFoundException if either is invalid.
+// 2. It checks if the resource can be lent (some resources like Conferences cannot be borrowed at all) and if it is currently available (not already on loan), throwing ResourceUnavailableException if either condition is violated.
+// 3. It checks if the user has reached their borrow limit (Students can borrow 1 item, Staff can borrow 2 items, and LibStaff cannot borrow any items), throwing BorrowLimitException if the user cannot borrow more.
+// If all checks pass, it marks the resource as borrowed, increments the user's current loan count, adds a new Loan to the list of active loans, and logs the event in the activity log.    
+
 void LoanManager::borrow(int userID, const std::string& resourceID) {
     auto user     = findUser(userID);         // throws NotFoundException
     auto resource = findResource(resourceID); // throws NotFoundException
@@ -102,7 +106,7 @@ void LoanManager::borrow(int userID, const std::string& resourceID) {
             std::to_string(user->getBorrowLimit()) + ").");
     }
 
-    // All checks passed -- commit the loan.
+    // All checks passed = commit the loan.
     resource->setBorrowed(true);
     user->incrementLoans();
     _activeLoans.emplace_back(user, resource);
@@ -111,9 +115,11 @@ void LoanManager::borrow(int userID, const std::string& resourceID) {
              resource->getTitle() + "' (" + resource->getID() + ")");
 }
 
-// ------------------------------------------------------------------
-// The return operation: find the matching loan, reverse it.
-// ------------------------------------------------------------------
+// The returnResource method implements the logic for returning a borrowed resource. It performs several checks:
+// 1. It validates that the user ID and resource ID exist in the system, throwing NotFoundException if either is invalid.
+// 2. It checks if there is an active loan that matches the given user ID and resource ID, throwing NotFoundException if no such loan exists (if the user tries to return a resource they haven't borrowed, or if they try to return a resource that is not currently on loan).
+// If the loan is found, it marks the resource as available again, decrements the user's current loan count, removes the loan from the list of active loans, and logs the return event in the activity log. 
+
 void LoanManager::returnResource(int userID, const std::string& resourceID) {
     // Validate both IDs exist (for a clean error message).
     auto user     = findUser(userID);
@@ -132,7 +138,7 @@ void LoanManager::returnResource(int userID, const std::string& resourceID) {
             " and resource '" + resourceID + "'.");
     }
 
-    // Reverse the loan.
+    // Loan found = commit the return.
     resource->setBorrowed(false);
     user->decrementLoans();
     _activeLoans.erase(it);

@@ -10,7 +10,7 @@
 // As mentioned in the brief, journals can be lent.
 Journal::Journal(const std::string& id, const std::string& title, const std::string& issn)
     : Resource(id, title, true), _issn(issn) {}
-
+// The asString method provides a human-readable description of the journal, including its ID, title, and ISSN. It also indicates whether the journal is currently on loan or available.
 std::string Journal::asString() const {
     std::ostringstream oss;
     oss << "[JOURNAL] " << _ID << " | " << _title << " (ISSN " << _issn << ")"

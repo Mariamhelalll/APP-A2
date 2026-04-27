@@ -11,8 +11,7 @@
 #include <stdexcept>
 #include <string>
 
-// Root of our exception hierarchy. Catching this catches every
-// library-level business error.
+// Root of our exception hierarchy. Catching this catches every library-level business error.
 class LibraryException : public std::runtime_error {
 public:
     using std::runtime_error::runtime_error;
@@ -25,15 +24,14 @@ public:
         : LibraryException(msg) {}
 };
 
-// Thrown when a resource cannot be borrowed (already on loan,
-// or not lendable in the first place, e.g. Conference).
+// Thrown when a resource cannot be borrowed (already on loan, or is not lendable in the first place, eg: Conference).
 class ResourceUnavailableException : public LibraryException {
 public:
     explicit ResourceUnavailableException(const std::string& msg)
         : LibraryException(msg) {}
 };
 
-// Thrown when a user ID or resource ID is not found in the system.
+// outputed when a user ID or resource ID is not found in the system.
 class NotFoundException : public LibraryException {
 public:
     explicit NotFoundException(const std::string& msg)
