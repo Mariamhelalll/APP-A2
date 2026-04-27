@@ -167,7 +167,7 @@ int main() {
                 case 11: Reports::printActivityLog(manager);      break;
                 case 12: Reports::printOverdue(manager);          break;
                 case 13: Statistics::printDashboard(manager);     break;
-                case 0:  std::cout << "Goodbye.\n"; return 0;
+                case 0:  std::cout << "Goodbye!\n"; return 0;
                 default: std::cout
                            << "  [!] Unknown option. Please choose 0-13.\n";
             }
