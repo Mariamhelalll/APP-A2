@@ -1,4 +1,3 @@
-// =============================================================
 // File:       UserList.h
 // Author:     Maryam Mohamed
 // Student ID: 29073094
@@ -6,7 +5,7 @@
 // Assignment: Assessment Item 2
 // Purpose:    Owns the master list of system users. Loads them
 //             from a pipe-delimited text file using a factory.
-// =============================================================
+
 #pragma once
 
 #include <vector>
