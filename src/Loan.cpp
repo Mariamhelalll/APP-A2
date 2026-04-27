@@ -1,6 +1,10 @@
-// =============================================================
+
 // File:       Loan.cpp
-// =============================================================
+// Name:       Maryam Mohamed
+// Student ID: 29073094
+// Module:     CMP2811 Applied Programming Paradigms
+// Assignment: Assessment Item 2 - Library Management System
+
 #include "Loan.h"
 
 #include <ctime>

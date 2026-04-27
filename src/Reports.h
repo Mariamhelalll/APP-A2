@@ -1,4 +1,3 @@
-// =============================================================
 // File:       Reports.h
 // Author:     Maryam Mohamed
 // Student ID: 29073094
@@ -6,7 +5,6 @@
 // Assignment: Assessment Item 2
 // Purpose:    Generates the core, listed-extended, and Day-7
 //             innovative reports.
-// =============================================================
 #pragma once
 
 #include <string>

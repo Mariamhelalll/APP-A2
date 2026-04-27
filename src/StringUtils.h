@@ -1,4 +1,3 @@
-// =============================================================
 // File:       StringUtils.h
 // Author:     Maryam Mohamed
 // Student ID: 29073094
@@ -8,7 +7,7 @@
 //             project. Centralising the split() helper here
 //             removes the duplicate that existed in both
 //             ResourceList.cpp and UserList.cpp (Day 6 DRY fix).
-// =============================================================
+
 #pragma once
 
 #include <algorithm>

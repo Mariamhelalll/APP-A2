@@ -1,4 +1,3 @@
-// =============================================================
 // File:       Resource.h
 // Author:     Maryam Mohamed
 // Student ID: 29073094
@@ -8,7 +7,7 @@
 //             (Book, Journal, Conference). Encodes whether a
 //             type is lendable at all (_canLend) and whether
 //             a specific item is currently on loan (_isBorrowed).
-// =============================================================
+
 #pragma once
 
 #include <string>

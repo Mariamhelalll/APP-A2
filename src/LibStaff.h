@@ -1,6 +1,9 @@
-// =============================================================
 // File:       LibStaff.h
-// =============================================================
+// Name:       Maryam Mohamed
+// Student ID: 29073094         
+// Module:     CMP2811 Applied Programming Paradigms
+// Assignment: Assessment Item 2 - Library Management System
+
 #pragma once
 #include "Person.h"
 

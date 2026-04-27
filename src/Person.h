@@ -1,4 +1,3 @@
-// =============================================================
 // File:       Person.h
 // Author:     Maryam Mohamed
 // Student ID: 29073094
@@ -8,7 +7,7 @@
 //             Staff, LibStaff). Carries the identity, borrow-limit
 //             policy, and current-loan count used by the business
 //             rules in LoanManager.
-// =============================================================
+
 #pragma once
 
 #include <string>

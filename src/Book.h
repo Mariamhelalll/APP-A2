@@ -7,10 +7,7 @@
 #pragma once
 #include "Resource.h"
 
-/**
- * @class Book
- * @brief A lendable book with an author field.
- */
+
 class Book final : public Resource {
 private:
     std::string _author;

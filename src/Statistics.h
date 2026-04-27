@@ -1,4 +1,3 @@
-// =============================================================
 // File:       Statistics.h
 // Author:     Maryam Mohamed
 // Student ID: 29073094
@@ -13,7 +12,7 @@
 //               - most-active borrower
 //             Uses std::map for the aggregations, demonstrating
 //             effective use of STL associative containers.
-// =============================================================
+
 #pragma once
 
 #include "LoanManager.h"

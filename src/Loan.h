@@ -1,4 +1,4 @@
-// =============================================================
+
 // File:       Loan.h
 // Author:     Maryam Mohamed
 // Student ID: 29073094
@@ -7,7 +7,7 @@
 // Purpose:    Records a single borrowing transaction with a
 //             timestamped loan date and a due date 14 days later.
 //             Day 7 innovative feature: overdue detection.
-// =============================================================
+
 #pragma once
 
 #include <memory>

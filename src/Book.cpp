@@ -6,7 +6,7 @@
 #include "Book.h"
 #include <sstream>
 
-// Books can be lent = pass true to Resource constructor.
+// Books can be lent = (this will pass true to "Resource" constructor)
 Book::Book(const std::string& id, const std::string& title, const std::string& author)
     : Resource(id, title, true), _author(author) {}
 

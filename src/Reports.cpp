@@ -1,8 +1,9 @@
-// =============================================================
 // File:       Reports.cpp
 // Author:     Maryam Mohamed
 // Student ID: 29073094
-// =============================================================
+// Module:     CMP2811 Applied Programming Paradigms
+// Assignment: Assessment Item 2 - Library Management System
+
 #include "Reports.h"
 #include "Book.h"
 #include "Conference.h"

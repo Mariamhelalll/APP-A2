@@ -1,4 +1,4 @@
-// =============================================================
+
 // File:       main.cpp
 // Author:     Maryam Mohamed
 // Student ID: 29073094
@@ -8,7 +8,6 @@
 //             extended features:
 //               12. Overdue loans report (uses <chrono>)
 //               13. Statistics dashboard (uses std::map)
-// =============================================================
 #include <iostream>
 #include <stdexcept>
 #include <string>
